@@ -14,8 +14,8 @@ function App() {
                     <NaviBar/>
                     <Routes>
                         <Route exact path="/about" element={<About/>}/>
-                        <Route exact path="/" element={<Rent/>}/>
-                        <Route path="rent/:id" element={<DetailedTruck/>}/>
+                        <Route  path="/" element={<Rent/>}/>
+                        <Route exact path="rent/:id" element={<DetailedTruck/>}/>
                     </Routes>
                 </React.StrictMode>
             </Router>

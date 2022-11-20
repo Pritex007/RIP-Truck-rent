@@ -43,7 +43,7 @@ const TruckCard = ({id, name, brand, image, capacity, price, isSelected, onClick
                 </Link>
                 <ListGroup className="list-group-flush">
                     <ListGroup.Item>Объём: {capacity}м<sup>3</sup></ListGroup.Item>
-                    <ListGroup.Item>Стоимость: {price}р.</ListGroup.Item>
+                    <ListGroup.Item>Стоимость: {price} р.</ListGroup.Item>
 
                     <Button variant="primary"
                             style={isSelected ? selectedButtonStyle : unSelectedButtonStyle}

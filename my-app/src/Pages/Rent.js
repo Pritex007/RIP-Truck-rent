@@ -14,20 +14,41 @@ const TableCardStyle = {
     margin: "8px 8px 8px 0px",
 }
 
-async function getTrucks() {
-    const res = await fetch(`/api/cars/`)
-        .then((response) => {
-            return response.json();
-        }).catch(()=>{
-            return {resultCount:1, results:[]}
-        })
-    return res
-}
-
 function Rent() {
     const [selectedCards, setSelectedCards] = useState([])
+    const [trucks, setTrucks] = useState([])
+    const [brands, setBrands] = useState([])
 
-    useEffect()
+    useEffect(()=>{
+        const  getTrucks = async () => {
+            const res = await fetch(`/api/cars/`)
+                .then((response) => {
+                     return response.json();
+                }).catch(()=>{
+                    return {resultCount:0, results:[]}
+                })
+            console.log(res)
+            setTrucks(res)
+            const resBrands = []
+            for (const element of res) {
+                const brand = await fetch(`/api/brands/${element.brand}`)
+                    .then((response) => {
+                        return response.json();
+                    }).catch(()=>{
+                        return {resultCount:0, results:[]}
+                    })
+                console.log(brand)
+                resBrands.push(brand.title)
+            }
+            setBrands(resBrands)
+        }
+        getTrucks();
+
+        return () => {
+            setBrands([]);
+            setTrucks([]);
+        }
+    },[])
 
     const onClickSelect = (id) => {
         if (selectedCards.includes(id)) {
@@ -40,19 +61,16 @@ function Rent() {
     return (
         <>
             <IntervalSelector/>
-            {!getData().length && <div>
-                <h1>К сожалению, пока нет свободного транспорта :(</h1>
-            </div>}
 
             <Row className="g-4" style={TableBlockStyle}>
-                {getData().map((item)=>{
+                {trucks.map((item, index)=>{
                     return<Col>
                         <TruckCard id={item.pk}
-                                   name={item.name}
-                                   brand={item.brand}
-                                   price={item.brand}
+                                   name={item.title}
+                                   price={item.price}
+                                   brand={brands[index]}
                                    capacity={item.capacity}
-                                   image={item.image}
+                                   image={item.photo}
                                    isSelected={selectedCards.includes(item.pk)}
                                    onClickSelect={onClickSelect}/>
                     </Col>

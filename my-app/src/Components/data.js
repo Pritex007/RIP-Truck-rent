@@ -10,7 +10,6 @@ let getData = () =>
             capacity: 8,
             price: 18000,
             payload: 6,
-            country: "Германия",
             description: "Самый лучший способ доставить небольшие вещи",
         },
         {
@@ -21,7 +20,6 @@ let getData = () =>
             capacity: 16,
             payload: 16,
             price: 50000,
-            country: "Германия",
             description: "Самый лучший способ доставить безопасно вещи",
         },
         {
@@ -32,7 +30,6 @@ let getData = () =>
             capacity: 16,
             payload: 16,
             price: 20000,
-            country: "Россия",
             description: "Самый русский способ доставить вещи"
         },
         {
@@ -41,9 +38,8 @@ let getData = () =>
             name: "Magnum",
             image: "https://pustojbak.ru/wp-content/uploads/2018/05/maxresdefault-1-1.jpg",
             capacity: 16,
-            payload: 6,
+            payload: 16,
             price: 30000,
-            country: "Франция",
             description: "Самый средний способ доставить безопасно вещи",
         },
     ]

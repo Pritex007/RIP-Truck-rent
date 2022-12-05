@@ -1,8 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {Card, Col, Row, Button, Spinner} from "react-bootstrap";
+import React, {useContext, useEffect} from 'react';
+import {Col, Row, Button} from "react-bootstrap";
 import TruckCard from "../Components/TruckCard";
 import IntervalSelector from "../Components/IntervalSelector";
-import getData from "../Components/data";
+import {LOAD_TRUCKS, SWITCH_ID} from "../Supporting Files/reducer";
+import {Context} from "../Supporting Files/context";
+import {checkUserIsAuth} from "../App";
+import {postOrder} from "../Supporting Files/NetworkRequests";
 
 const TableBlockStyle = {
     margin: "20px 15%",
@@ -15,67 +18,75 @@ const TableCardStyle = {
 }
 
 function Rent() {
-    const [selectedCards, setSelectedCards] = useState([])
-    const [trucks, setTrucks] = useState([])
-    const [brands, setBrands] = useState([])
+    const {
+        fetchTrucks,
+        fetchBrands,
+        state,
+        dispatch
+    } = useContext(Context)
 
-    useEffect(()=>{
-        const  getTrucks = async () => {
-            const res = await fetch(`/api/cars/`)
-                .then((response) => {
-                     return response.json();
-                }).catch(()=>{
-                    return {resultCount:0, results:[]}
-                })
-            console.log(res)
-            setTrucks(res)
-            const resBrands = []
-            for (const element of res) {
-                const brand = await fetch(`/api/brands/${element.brand}`)
-                    .then((response) => {
-                        return response.json();
-                    }).catch(()=>{
-                        return {resultCount:0, results:[]}
-                    })
-                console.log(brand)
-                resBrands.push(brand.title)
-            }
-            setBrands(resBrands)
-        }
-        getTrucks();
-
-        return () => {
-            setBrands([]);
-            setTrucks([]);
-        }
-    },[])
-
-    const onClickSelect = (id) => {
-        if (selectedCards.includes(id)) {
-            setSelectedCards(prev => prev.filter(_id => _id != id));
+    const tryPost = () => {
+        if (state.id != 0) {
+            postOrder({
+                price: state.trucks.find(element => element.pk == state.selectedTruck).price,
+                address_take: "Москва",
+                time: state.time,
+                car: state.selectedTruck,
+                user: state.id
+            })
         } else {
-            setSelectedCards((prev) => [...prev, id])
+            alert("Авторизируйтесь, чтобы оформить заказ")
         }
     }
+
+    useEffect(()=>{
+        fetchTrucks().then(trucks => {
+            fetchBrands(trucks).then(brands => {
+                dispatch({
+                    type: LOAD_TRUCKS,
+                    payload: {
+                        trucks: trucks,
+                        brands: brands
+                    }
+                })
+            })
+        })
+    },[])
+
+    useEffect(()=>{
+    },[state])
 
     return (
         <>
             <IntervalSelector/>
-
             <Row className="g-4" style={TableBlockStyle}>
-                {trucks.map((item, index)=>{
+                {state.trucks.map((item, index)=>{
+                    console.log(state.selectedTruck)
                     return<Col>
-                        <TruckCard id={item.pk}
-                                   name={item.title}
-                                   price={item.price}
-                                   brand={brands[index]}
-                                   capacity={item.capacity}
-                                   image={item.photo}
-                                   isSelected={selectedCards.includes(item.pk)}
-                                   onClickSelect={onClickSelect}/>
+                        <TruckCard
+                            key={item.pk}
+                            id={item.pk}
+                            name={item.title}
+                            price={item.price}
+                            brand={state.brands[index]}
+                            capacity={item.capacity}
+                            image={item.photo}
+                            isSelected={state.selectedTruck == item.pk}/>
                     </Col>
                 })}
             </Row>
+            <Button variant="primary"
+                    style={{
+                        display: "block",
+                        marginLeft: "auto",
+                        marginRight: "auto",
+                        width: "160px",
+                        height: "80px",
+                        fontSize: "30px"}}
+                    onClick={tryPost}
+            >
+                Заказать
+            </Button>
         </>
     );
 }

@@ -2,7 +2,9 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import {Link} from "react-router-dom";
-import {useState} from "react";
+import {useContext} from "react";
+import {TOGGLE_TRUCK} from "../Supporting Files/reducer";
+import {Context} from "../Supporting Files/context";
 
 const cardStyle = {
     margin: "8px auto",
@@ -31,10 +33,11 @@ const moreLink = {
     color: "black"
 };
 
-const TruckCard = ({id, name, brand, image, capacity, price, isSelected, onClickSelect}) => {
+const TruckCard = ({id, name, brand, image, capacity, price, isSelected}) => {
+    const { dispatch } = useContext(Context)
 
     return (
-            <Card key={id} style={cardStyle}>
+            <Card style={cardStyle}>
                 <Link to={`/rent/${id}`} style={moreLink}>
                     <Card.Img style={cardImage} className="img-fluid" variant="top" src={image} height={100} width={100}/>
                 <Card.Body>
@@ -47,7 +50,10 @@ const TruckCard = ({id, name, brand, image, capacity, price, isSelected, onClick
 
                     <Button variant="primary"
                             style={isSelected ? selectedButtonStyle : unSelectedButtonStyle}
-                            onClick={() => onClickSelect(id)}>
+                            onClick={() => dispatch({
+                                type: TOGGLE_TRUCK,
+                                payload: { id: id }
+                            })}>
                         {isSelected ? "Выбрано" : "Выбрать"}
                     </Button>
                 </ListGroup>

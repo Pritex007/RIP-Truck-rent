@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const postOrder = async (order) => {
     console.log(order)
-    axios.post('http://127.0.0.1:8000/api/orders/', order)
+    axios.post('api/orders/', order)
         .then(function (response) {
             console.log(response);
         })
@@ -12,8 +12,8 @@ export const postOrder = async (order) => {
         });
 }
 
-export const fetchTrucks = async () => {
-    const res = await fetch(`http://127.0.0.1:8000/api/cars/`)
+export const fetchTrucks = async (min, max) => {
+    const res = await fetch(`api/cars/?price_min=${min}&price_max=${max}`)
         .then((response) => {
             return response.json();
         }).catch(() => {
@@ -27,7 +27,7 @@ export const fetchBrands = async (tempTrucks) => {
     const res = []
     console.log(tempTrucks)
     for (const element of tempTrucks) {
-        const tempRes = await fetch(`http://127.0.0.1:8000/api/brands/${element.brand}`)
+        const tempRes = await fetch(`api/brands/${element.brand}`)
             .then((response) => {
                 return response.json();
             }).catch(() => {
@@ -40,7 +40,7 @@ export const fetchBrands = async (tempTrucks) => {
 }
 
 export const fetchTruck = async (truckID) => {
-    const res = await fetch(`http://127.0.0.1:8000/api/cars/${truckID}`)
+    const res = await fetch(`api/cars/${truckID}`)
         .then((response) => {
             return response.json();
         }).catch(() => {
@@ -52,7 +52,7 @@ export const fetchTruck = async (truckID) => {
 }
 
 export const fetchBrand = async (brandID) => {
-    const res = await fetch(`http://127.0.0.1:8000/api/brands/${brandID}`)
+    const res = await fetch(`api/brands/${brandID}`)
         .then((response) => {
             return response.json();
         }).catch(()=>{
@@ -64,7 +64,7 @@ export const fetchBrand = async (brandID) => {
 }
 
 export const fetchOrders = async (userID) => {
-    var res = await fetch(`http://127.0.0.1:8000/api/orders`)
+    var res = await fetch(`api/orders`)
         .then((response) => {
             return response.json();
         }).catch(()=>{

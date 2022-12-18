@@ -13,6 +13,8 @@ import {
 import {defaultState, Context} from "./Supporting Files/context";
 import History from "./Pages/History";
 import {fetchBrand, fetchBrands, fetchOrders, fetchTruck, fetchTrucks} from "./Supporting Files/NetworkRequests";
+import Register from "./Pages/register";
+import Login from "./Pages/login";
 
 function App() {
     const [state, dispatch] = useReducer(reducer, defaultState);
@@ -55,6 +57,8 @@ function App() {
                     <Routes>
                         <Route exact path="/about" element={<About/>}/>
                         <Route  path="/" element={<Rent/>}/>
+                        <Route  path="/register" element={<Register/>}/>
+                        <Route  path="/login" element={<Login/>}/>
                         <Route exact path="rent/:id" element={<DetailedTruck/>}/>
                         <Route exact path="history/:id" element={<History/>}/>
                     </Routes>

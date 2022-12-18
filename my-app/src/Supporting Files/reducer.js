@@ -9,12 +9,58 @@ export const
     LOAD_ORDERS = "LOAD_ORDERS",
     SWITCH_ID = "SWITCH_ID",
     POST_ORDER = "POST_ORDER",
-    DATETIME_CHANGE = "DATETIME_CHANGE"
+    DATETIME_CHANGE = "DATETIME_CHANGE",
+    SET_MIN_PRICE = "SET_MIN_PRICE",
+    SET_MAX_PRICE = "SET_MAX_PRICE",
+
+    REGISTER_SUCCESS = "REGISTER_SUCCESS",
+    REGISTER_FAIL = "REGISTER_FAIL",
+    LOGIN_SUCCESS = "LOGIN_SUCCESS",
+    LOGIN_FAIL = "LOGIN_FAIL",
+    LOGOUT_SUCCESS = "LOGOUT_SUCCESS",
+    LOGOUT_FAIL = "LOGOUT_FAIL",
+    AUTHENTICATED_SUCCESS = "AUTHENTICATED_SUCCESS",
+    AUTHENTICATED_FAIL = "AUTHENTICATED_FAIL",
+
+    LOAD_USER_PROFILE_SUCCESS = "LOAD_USER_PROFILE_SUCCESS",
+    LOAD_USER_PROFILE_FAIL = "LOAD_USER_PROFILE_FAIL"
 
 export const reducer = (state, action) => {
 // type, payload
     const { type, payload } = action
     switch(type) {
+        case AUTHENTICATED_SUCCESS:
+        case AUTHENTICATED_FAIL:
+            return {
+                ...state,
+                isAuthenticated: payload
+            }
+        case REGISTER_SUCCESS:
+            console.log("REGISTER_SUCCESS")
+            return {
+                ...state,
+                isAuthenticated: false
+            }
+        case LOGIN_SUCCESS:
+            console.log("LOGIN_SUCCESS")
+            return {
+                ...state,
+                isAuthenticated: true
+            }
+        case LOGOUT_SUCCESS:
+        case REGISTER_FAIL:
+        case LOGIN_FAIL:
+        case LOGOUT_FAIL:
+        case SET_MIN_PRICE:
+            return {
+                ...state,
+                minPrice: payload.minPrice
+            }
+        case SET_MAX_PRICE:
+            return {
+                ...state,
+                maxPrice: payload.maxPrice
+            }
         case DATETIME_CHANGE:
             console.log("DATETIME_CHANGE")
             const newTime = new Date(payload.time).toJSON()
@@ -70,24 +116,28 @@ export const reducer = (state, action) => {
 
         case GET_SELECTED_TRUCK_FROM_LOCAL:
             console.log(`GET_SELECTED_TRUCK_FROM_LOCAL`)
-            const raw = localStorage.getItem(`BMSTU USER: ${state.id}`) || {}
-            const prepared = JSON.parse(raw)
-            if (prepared.id == state.id) {
-                return {
-                    ...state,
-                    selectedTruck: prepared.selectedTruck,
+            try {
+                const raw = localStorage.getItem(`BMSTU USER: ${state.id}`) || {}
+                const prepared = JSON.parse(raw)
+                if (prepared.id == state.id) {
+                    return {
+                        ...state,
+                        selectedTruck: prepared.selectedTruck,
+                    }
+                } else {
+                    return state
                 }
-            } else {
-                return state
-            }
+            } catch { return state }
 
         case SET_SELECTED_TRUCK_FOR_LOCAL:
+            try {
             console.log(`SET_SELECTED_TRUCK_FOR_LOCAL`)
             localStorage.setItem(`BMSTU USER: ${state.id}`, JSON.stringify({
                 id: state.id,
                 selectedTruck: state.selectedTruck
             }))
             return state
+            } catch { return state }
         default:
             return state
     }

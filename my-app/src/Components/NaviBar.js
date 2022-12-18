@@ -1,10 +1,12 @@
-import { Link } from  'react-router-dom'
+import { Link, use } from  'react-router-dom'
+import { Fragment } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Button, Nav } from 'react-bootstrap';
 import React, {useContext} from "react";
 import {Context} from "../Supporting Files/context";
 import {Switch} from "@mui/material";
 import {SWITCH_ID} from "../Supporting Files/reducer";
+import {logout} from "../Supporting Files/auth";
 
 const linkStyle = {
     margin: "6px",
@@ -20,8 +22,20 @@ const brandStyle = {
     fontSize: "24px"
 };
 
+
 function NaviBar() {
     const { state, dispatch } = useContext(Context)
+
+    const authLinks = (
+        <Nav.Link><Link to="/login" style={linkStyle} onClick={logout}>LogOut</Link></Nav.Link>
+    );
+
+    const guestLinks = (
+        <>
+            <Nav.Link><Link to="/login" style={linkStyle}>LogIn</Link></Nav.Link>
+            <Nav.Link><Link to="/register" style={linkStyle}>SignUp</Link></Nav.Link>
+        </>
+    );
 
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -37,6 +51,7 @@ function NaviBar() {
                         payload: {}
                     })}>Switch</Button>
                 </Nav>
+                { state.isAuthenticated ? authLinks : guestLinks }
             </Navbar.Collapse>
         </Navbar>
     );

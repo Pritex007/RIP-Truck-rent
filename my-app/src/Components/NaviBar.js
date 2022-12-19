@@ -27,7 +27,9 @@ function NaviBar() {
     const { state, dispatch } = useContext(Context)
 
     const authLinks = (
-        <Nav.Link><Link to="/login" style={linkStyle} onClick={logout}>LogOut</Link></Nav.Link>
+        <>
+            <Nav.Link><Link to="/login" style={linkStyle} onClick={() => {logout().then(status => {dispatch({type: status, payload: {}})})}}>LogOut</Link></Nav.Link>
+        </>
     );
 
     const guestLinks = (

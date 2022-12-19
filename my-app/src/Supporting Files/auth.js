@@ -1,4 +1,3 @@
-import axios from 'axios';
 import Cookies from 'js-cookie';
 import {
     REGISTER_SUCCESS,
@@ -11,8 +10,11 @@ import {
     AUTHENTICATED_FAIL
 } from './reducer';
 
-export const checkAuthenticated = () => async dispatch => {
+import axios, { AxiosInstance } from 'axios';
+
+export const checkAuthenticated = async () => {
     const config = {
+        withCredentials: true,
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -20,36 +22,25 @@ export const checkAuthenticated = () => async dispatch => {
     };
 
     try {
-        const res = await axios.get(`/authenticated`, config);
+        const res = await axios.get(`http://localhost:8000/authenticated`, config);
 
         if (res.data.error || res.data.isAuthenticated === 'error') {
-            dispatch({
-                type: AUTHENTICATED_FAIL,
-                payload: false
-            });
+            return  AUTHENTICATED_FAIL
         }
         else if (res.data.isAuthenticated === 'success') {
-            dispatch({
-                type: AUTHENTICATED_SUCCESS,
-                payload: true
-            });
+            return AUTHENTICATED_SUCCESS
         }
         else {
-            dispatch({
-                type: AUTHENTICATED_FAIL,
-                payload: false
-            });
+            return  AUTHENTICATED_FAIL
         }
     } catch(err) {
-        dispatch({
-            type: AUTHENTICATED_FAIL,
-            payload: false
-        });
+        return  AUTHENTICATED_FAIL
     }
 };
 
 export const login = async (username, password) => {
     const config = {
+        withCredentials: true,
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -60,26 +51,21 @@ export const login = async (username, password) => {
     const body = JSON.stringify({ username, password });
 
     try {
-        const res = await axios.post(`http://127.0.0.1:8000/login`, body, config);
+        const res = await axios.post('http://localhost:8000/auth/login', body, config)
 
         if (res.data.success) {
-            return { type: LOGIN_SUCCESS };
+            return LOGIN_SUCCESS
         } else {
-            return { type: LOGIN_FAIL };
+            return LOGIN_FAIL
         }
     } catch(err) {
-        return { type: LOGIN_FAIL };
+        return LOGIN_FAIL
     }
 };
 
 export const register = async(username, password, re_password) => {
-    console.log(username, password, re_password)
-    console.log({
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'X-CSRFToken': Cookies.get('csrftoken')
-    })
     const config = {
+        withCredentials: true,
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -91,20 +77,23 @@ export const register = async(username, password, re_password) => {
 
     console.log("Body", body)
     try {
-        const res = await axios.post(`/register`, body, config);
-
+        const res = await axios.post('http://localhost:8000/auth/register', body, config)
         if (res.data.error) {
+            console.log("REGISTER_FAIL")
             return REGISTER_FAIL
         } else {
+            console.log("REGISTER_SUCCESS")
             return REGISTER_SUCCESS
         }
     } catch (err) {
+        console.log("Error", err)
         return REGISTER_FAIL
     }
 };
 
-export const logout = () => async dispatch => {
+export const logout = async ()  => {
     const config = {
+        withCredentials: true,
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -112,25 +101,17 @@ export const logout = () => async dispatch => {
         }
     };
 
-    const body = JSON.stringify({
-        'withCredentials': true
-    });
+    const body = JSON.stringify({});
 
     try {
-        const res = await axios.post(`/logout`, body, config);
+        const res = await axios.post(`http://localhost:8000/auth/logout`, body, config);
 
         if (res.data.success) {
-            dispatch({
-                type: LOGOUT_SUCCESS
-            });
+            return LOGOUT_SUCCESS
         } else {
-            dispatch({
-                type: LOGOUT_FAIL
-            });
+            return LOGOUT_FAIL
         }
     } catch(err) {
-        dispatch({
-            type: LOGOUT_FAIL
-        });
+        return LOGOUT_FAIL
     }
 };

@@ -15,6 +15,7 @@ import History from "./Pages/History";
 import {fetchBrand, fetchBrands, fetchOrders, fetchTruck, fetchTrucks} from "./Supporting Files/NetworkRequests";
 import Register from "./Pages/register";
 import Login from "./Pages/login";
+import {checkAuthenticated} from "./Supporting Files/auth";
 
 function App() {
     const [state, dispatch] = useReducer(reducer, defaultState);
@@ -25,6 +26,15 @@ function App() {
             payload: {}
         })
     }, [state.id])
+
+    useEffect(()=>{
+        checkAuthenticated().then(status => {
+            dispatch({
+                type: status,
+                payload: {}
+            })
+        })
+    },[])
 
     useEffect(()=>{
         console.log("STATE RELOAD IN APP")
@@ -52,7 +62,6 @@ function App() {
             state, dispatch
         }}>
             <Router>
-                <React.StrictMode>
                     <NaviBar/>
                     <Routes>
                         <Route exact path="/about" element={<About/>}/>
@@ -62,7 +71,6 @@ function App() {
                         <Route exact path="rent/:id" element={<DetailedTruck/>}/>
                         <Route exact path="history/:id" element={<History/>}/>
                     </Routes>
-                </React.StrictMode>
             </Router>
         </Context.Provider>
 );

@@ -28,12 +28,22 @@ export const
 export const reducer = (state, action) => {
 // type, payload
     const { type, payload } = action
+    console.log("REDUCER", type)
     switch(type) {
-        case AUTHENTICATED_SUCCESS:
+        case LOGOUT_SUCCESS:
+            return {
+                ...state,
+                isAuthenticated: false
+            }
         case AUTHENTICATED_FAIL:
             return {
                 ...state,
-                isAuthenticated: payload
+                isAuthenticated: false
+            }
+        case AUTHENTICATED_SUCCESS:
+            return {
+                ...state,
+                isAuthenticated: true
             }
         case REGISTER_SUCCESS:
             console.log("REGISTER_SUCCESS")
@@ -47,10 +57,6 @@ export const reducer = (state, action) => {
                 ...state,
                 isAuthenticated: true
             }
-        case LOGOUT_SUCCESS:
-        case REGISTER_FAIL:
-        case LOGIN_FAIL:
-        case LOGOUT_FAIL:
         case SET_MIN_PRICE:
             return {
                 ...state,

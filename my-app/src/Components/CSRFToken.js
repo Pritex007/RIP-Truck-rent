@@ -23,18 +23,17 @@ const CSRFToken = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                await axios.get(`/csrf_cookie`);
+                axios.get("http://localhost:8000/api/csrf_cookie", { withCredentials: true })
             } catch (err) {
 
             }
         };
-
         fetchData();
         setcsrftoken(getCookie('csrftoken'));
     }, []);
 
     return (
-        <input type='hidden' value={csrftoken} />
+        <input type='hidden' name='csrfmiddlewaretoken' value={csrftoken} />
     );
 };
 

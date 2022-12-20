@@ -26,13 +26,13 @@ function Rent() {
     } = useContext(Context)
 
     const tryPost = () => {
-        if (state.id != 0) {
+        if (state.isAuthenticated) {
             postOrder({
                 price: state.trucks.find(element => element.pk == state.selectedTruck).price,
                 address_take: "Москва",
                 time: state.time,
                 car: state.selectedTruck,
-                user: state.id
+                userProfile: state.id
             })
         } else {
             alert("Авторизируйтесь, чтобы оформить заказ")

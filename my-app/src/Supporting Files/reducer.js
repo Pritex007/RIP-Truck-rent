@@ -52,9 +52,10 @@ export const reducer = (state, action) => {
                 isAuthenticated: false
             }
         case LOGIN_SUCCESS:
-            console.log("LOGIN_SUCCESS")
+            console.log("LOGIN_SUCCESS ID", payload)
             return {
                 ...state,
+                id: payload,
                 isAuthenticated: true
             }
         case SET_MIN_PRICE:

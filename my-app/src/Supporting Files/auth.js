@@ -54,7 +54,7 @@ export const login = async (username, password) => {
         const res = await axios.post('http://localhost:8000/auth/login', body, config)
 
         if (res.data.success) {
-            return LOGIN_SUCCESS
+            return {type: LOGIN_SUCCESS, payload: res.data.userProfileId}
         } else {
             return LOGIN_FAIL
         }

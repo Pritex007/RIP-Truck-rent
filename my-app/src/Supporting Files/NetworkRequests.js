@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const postOrder = async (order) => {
     console.log(order)
-    axios.post('/api/orders/', order)
+    axios.post('http://localhost:8000/api/orders/', order)
         .then(function (response) {
             console.log(response);
         })
@@ -40,7 +40,7 @@ export const fetchBrands = async (tempTrucks) => {
 }
 
 export const fetchTruck = async (truckID) => {
-    const res = await fetch(`/api/cars/${truckID}`)
+    const res = await fetch(`http://localhost:8000/api/cars/${truckID}`)
         .then((response) => {
             return response.json();
         }).catch(() => {
@@ -52,7 +52,7 @@ export const fetchTruck = async (truckID) => {
 }
 
 export const fetchBrand = async (brandID) => {
-    const res = await fetch(`/api/brands/${brandID}`)
+    const res = await fetch(`http://localhost:8000/api/brands/${brandID}`)
         .then((response) => {
             return response.json();
         }).catch(()=>{
@@ -64,13 +64,13 @@ export const fetchBrand = async (brandID) => {
 }
 
 export const fetchOrders = async (userID) => {
-    var res = await fetch(`/api/orders`)
+    var res = await fetch(`http://localhost:8000/api/orders`)
         .then((response) => {
             return response.json();
         }).catch(()=>{
             return {resultCount:0, results:[]}
         })
-    res = res.filter(order => order.user == userID)
+    res = res.filter(order => order.userProfile == userID)
     res = res.sort((a,b) => a.time < b.time)
     console.log("fetchOrders")
     console.log(res)

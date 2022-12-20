@@ -23,7 +23,7 @@ export default function Login() {
         console.log(username, password)
         login(username, password).then(status => {
             console.log('DISPATCH LOGIN', status)
-            dispatch({ type: status, payload: {} })
+            dispatch(status)
         })
     };
 

@@ -27,7 +27,7 @@ function History() {
     }, [])
 
 
-    if (id != 0) {
+    if (state.isAuthenticated) {
         return (
             <Table striped bordered hover style={{
                 width: "60%",

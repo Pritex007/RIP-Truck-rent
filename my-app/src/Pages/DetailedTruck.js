@@ -1,11 +1,13 @@
 import React, {useContext, useEffect} from 'react';
-import {Card} from "react-bootstrap";
+import {Card, Form} from "react-bootstrap";
 import ListGroup from "react-bootstrap/ListGroup";
 import {Link, useParams} from "react-router-dom";
 import {Breadcrumbs} from "@mui/material";
 import {Context} from "../Supporting Files/context";
-import {LOAD_TRUCK} from "../Supporting Files/reducer";
+import {CHANGE_TRUCK, LOAD_TRUCK, TOGGLE_TRUCK} from "../Supporting Files/reducer";
 import {createRoot} from "react-dom/client";
+import Button from "react-bootstrap/Button";
+import {changeTruck, deleteTruck} from "../Supporting Files/NetworkRequests";
 
 
 const cardStyle = {
@@ -17,6 +19,18 @@ const cardStyle = {
 const cardImage = {
     width: "100%",
     height: "500px",
+};
+
+const confirmButtonStyle = {
+    width: "100%",
+    backgroundColor: "green",
+    borderColor: "green"
+};
+
+const removeButtonStyle = {
+    width: "100%",
+    backgroundColor: "red",
+    borderColor: "red"
 };
 
 function DetailedTruck() {
@@ -31,16 +45,12 @@ function DetailedTruck() {
 
     useEffect(() => {
         fetchTruck(id).then(truck => {
-            fetchBrand(truck.brand).then(brand => {
                 dispatch({
                     type: LOAD_TRUCK,
                     payload: {
-                        truck: truck,
-                        brand: brand
+                        truck: truck
                     }
                 })
-                createRoot()
-            })
         })
         return () => {
 
@@ -71,32 +81,88 @@ function DetailedTruck() {
         getTruck();
     },[])*/
 
-    if (!state.truck || !state.brand) {
+    if (!state.truck) {
         return <></>
     } else {
-        return (
-            <>
-                <Breadcrumbs style={cardStyle} aria-label='breadcrumb'>
-                    <Link style={{textDecoration: 'none'}} to='/'>Rent</Link>
-                    <Link style={{textDecoration: 'none'}}
-                          to={`/rent/${id}`}>{state.brand.title + " " + state.truck.title}</Link>
-                </Breadcrumbs>
-                <Card style={cardStyle}>
-                    <Card.Img style={cardImage} className="img-fluid" variant="top" src={state.truck.photo} height={100}
-                              width={100}/>
-                    <Card.Body>
-                        <Card.Title>{state.brand.title + " " + state.truck.title}</Card.Title>
-                    </Card.Body>
-                    <ListGroup className="list-group-flush">
-                        <ListGroup.Item>Объём: {state.truck.capacity}м<sup>3</sup></ListGroup.Item>
-                        <ListGroup.Item>Стоимость: {state.truck.price}р.</ListGroup.Item>
-                        <ListGroup.Item>Страна: {state.brand.country}</ListGroup.Item>
-                        <ListGroup.Item>Описание: {state.truck.description}</ListGroup.Item>
-                        <ListGroup.Item>Грузоподъемность: {state.truck.payload} т.</ListGroup.Item>
-                    </ListGroup>
-                </Card>
-            </>
-        );
+        if (!state.isManager) {
+            return (
+                <>
+                    <Breadcrumbs style={cardStyle} aria-label='breadcrumb'>
+                        <Link style={{textDecoration: 'none'}} to='/'>Rent</Link>
+                        <Link style={{textDecoration: 'none'}}
+                              to={`/rent/${id}`}>{state.truck.brand + " " + state.truck.title}</Link>
+                    </Breadcrumbs>
+                    <Card style={cardStyle}>
+                        <Card.Img style={cardImage} className="img-fluid" variant="top" src={state.truck.photo}
+                                  height={100}
+                                  width={100}/>
+                        <Card.Body>
+                            <Card.Title>{state.truck.brand + " " + state.truck.title}</Card.Title>
+                        </Card.Body>
+                        <ListGroup className="list-group-flush">
+                            <ListGroup.Item>Вместимость: {state.truck.capacity}м<sup>3</sup></ListGroup.Item>
+                            <ListGroup.Item>Стоимость: {state.truck.price}р.</ListGroup.Item>
+                            <ListGroup.Item>Описание: {state.truck.description}</ListGroup.Item>
+                            <ListGroup.Item>Грузоподъемность: {state.truck.payload} т.</ListGroup.Item>
+                        </ListGroup>
+                    </Card>
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <Breadcrumbs style={cardStyle} aria-label='breadcrumb'>
+                        <Link style={{textDecoration: 'none'}} to='/'>Rent</Link>
+                        <Link style={{textDecoration: 'none'}}
+                              to={`/rent/${id}`}>{state.truck.brand + " " + state.truck.title}</Link>
+                    </Breadcrumbs>
+                    <Card style={cardStyle}>
+                        <Form.Group className="mb-2">
+                            <Form.Label >Фото</Form.Label>
+                            <Form.Control type="url" value={state.truck.photo} name="url photo" onChange={e => { dispatch({ type: CHANGE_TRUCK, payload: { photo: e.target.value } }) }}/>
+                        </Form.Group>
+                        <Form.Group className="mb-2">
+                            <Form.Label >Брэнд</Form.Label>
+                            <Form.Control type="url" value={state.truck.brand} name="brand" onChange={e => { dispatch({ type: CHANGE_TRUCK, payload: { brand: e.target.value } }) }}/>
+                        </Form.Group>
+                        <Form.Group className="mb-2">
+                            <Form.Label >Модель</Form.Label>
+                            <Form.Control type="url" value={state.truck.title} name="model" onChange={e => { dispatch({ type: CHANGE_TRUCK, payload: { title: e.target.value } }) }}/>
+                        </Form.Group>
+                        <Form.Group className="mb-2">
+                            <Form.Label >Вместимость, м<sup>3</sup></Form.Label>
+                            <Form.Control type="url" value={state.truck.capacity} name="capacity" onChange={e => { dispatch({ type: CHANGE_TRUCK, payload: { capacity: e.target.value } }) }}/>
+                        </Form.Group>
+                        <Form.Group className="mb-2">
+                            <Form.Label >Стоимость, р.</Form.Label>
+                            <Form.Control type="url" value={state.truck.price} name="price" onChange={e => { dispatch({ type: CHANGE_TRUCK, payload: { price: e.target.value } }) }}/>
+                        </Form.Group>
+                        <Form.Group className="mb-2">
+                            <Form.Label >Описание</Form.Label>
+                            <Form.Control type="url" value={state.truck.description} name="discription" onChange={e => { dispatch({ type: CHANGE_TRUCK, payload: { description: e.target.value } }) }}/>
+                        </Form.Group>
+                        <Form.Group className="mb-2">
+                            <Form.Label >Грузоподъемность, т.</Form.Label>
+                            <Form.Control type="url" value={state.truck.payload} name="payload" onChange={e => { dispatch({ type: CHANGE_TRUCK, payload: { payload: e.target.value } }) }}/>
+                        </Form.Group>
+                        <Button variant="primary"
+                                className="mb-2"
+                                style={confirmButtonStyle}
+                                onClick={
+                                    () => changeTruck(state.truck)
+                                }>
+                            Подтвердить изменения
+                        </Button>
+                        <Button variant="primary"
+                                style={removeButtonStyle}
+                                onClick={() => deleteTruck(state.truck.pk)}>
+                            Удалить
+                        </Button>
+                    </Card>
+
+                </>
+            );
+        }
     }
 }
 

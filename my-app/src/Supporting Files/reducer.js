@@ -1,4 +1,5 @@
 import {defaultState} from "./context";
+import {StatusEnum} from "../Pages/History";
 
 export const
     TOGGLE_TRUCK = 'TOGGLE_TRUCK',
@@ -12,6 +13,20 @@ export const
     DATETIME_CHANGE = "DATETIME_CHANGE",
     SET_MIN_PRICE = "SET_MIN_PRICE",
     SET_MAX_PRICE = "SET_MAX_PRICE",
+
+    CHANGE_ORDER_TRUCK = "CHANGE_ORDER_TRUCK",
+
+    SET_MIN_TIME = "SET_MIN_TIME",
+    SET_MAX_TIME = "SET_MAX_TIME",
+
+    CHANGE_STATUS = "CHANGE_STATUS",
+    CHANGE_STATUS_FILTER = "CHANGE_STATUS_FILTER",
+
+    DELETE_TRUCK = "DELETE_TRUCK",
+    CHANGE_TRUCK = "CHANGE_TRUCK",
+
+    CHANGE_ORDER_DRIVER = "CHANGE_ORDER_DRIVER",
+    CHANGE_ORDER_TIME = "CHANGE_ORDER_TIME",
 
     REGISTER_SUCCESS = "REGISTER_SUCCESS",
     REGISTER_FAIL = "REGISTER_FAIL",
@@ -30,6 +45,60 @@ export const reducer = (state, action) => {
     const { type, payload } = action
     console.log("REDUCER", type)
     switch(type) {
+        case CHANGE_ORDER_DRIVER:
+            var result = state.orders
+            result[payload.index].driver = payload.driver
+            return {
+                ...state,
+                orders: result
+            }
+        case CHANGE_ORDER_TIME:
+            var result = state.orders
+            result[payload.index].time = payload.time
+            return {
+                ...state,
+                orders: result
+            }
+        case CHANGE_ORDER_TRUCK:
+            var result = state.orders
+            result[payload.index].truck = payload.truckId
+            return {
+                ...state,
+                orders: result
+            }
+        case CHANGE_STATUS_FILTER:
+            return {
+                ...state,
+                statusFilter: payload
+            }
+        case SET_MAX_TIME:
+            return {
+                ...state,
+                maxTime: payload.maxTime
+            }
+        case SET_MIN_TIME:
+            return {
+                ...state,
+                minTime: payload.minTime
+            }
+        case CHANGE_STATUS:
+            var result = state.orders
+            result[payload.index].status = payload.status
+            if (payload.status == StatusEnum.Denied || payload.status == StatusEnum.Done) {
+                result[payload.index].date_end = new Date()
+            }
+            return {
+                ...state,
+                orders: result
+            }
+        case CHANGE_TRUCK:
+            return {
+                ...state,
+                truck: {
+                    ...state.truck,
+                    ...payload
+                }
+            }
         case LOGOUT_SUCCESS:
             return {
                 ...state,
@@ -43,6 +112,8 @@ export const reducer = (state, action) => {
         case AUTHENTICATED_SUCCESS:
             return {
                 ...state,
+                id: payload.userProfileId ?? 0,
+                isManager: payload.isManager,
                 isAuthenticated: true
             }
         case REGISTER_SUCCESS:
@@ -55,8 +126,9 @@ export const reducer = (state, action) => {
             console.log("LOGIN_SUCCESS ID", payload)
             return {
                 ...state,
-                id: payload,
-                isAuthenticated: true
+                id: payload.id,
+                isAuthenticated: true,
+                isManager: payload.isManager
             }
         case SET_MIN_PRICE:
             return {
@@ -97,15 +169,13 @@ export const reducer = (state, action) => {
             console.log("LOAD_TRUCKS")
             return {
                 ...state,
-                trucks: payload.trucks,
-                brands: payload.brands
+                trucks: payload.trucks
             }
         case LOAD_TRUCK:
             console.log("LOAD_TRUCK SUCCESS")
             return {
                 ...state,
-                truck: payload.truck,
-                brand: payload.brand
+                truck: payload.truck
             }
         case TOGGLE_TRUCK:
             console.log("TOGGLE_TRUCK")

@@ -17,7 +17,7 @@ export const checkAuthenticated = async () => {
         withCredentials: true,
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         }
     };
 
@@ -28,7 +28,7 @@ export const checkAuthenticated = async () => {
             return  AUTHENTICATED_FAIL
         }
         else if (res.data.isAuthenticated === 'success') {
-            return AUTHENTICATED_SUCCESS
+            return {isAuthenticated: AUTHENTICATED_SUCCESS, userProfileId: res.data.userProfileId, isManager: res.data.isManager}
         }
         else {
             return  AUTHENTICATED_FAIL
@@ -52,9 +52,9 @@ export const login = async (username, password) => {
 
     try {
         const res = await axios.post('http://localhost:8000/auth/login', body, config)
-
+        console.log("res.data.success", res.data.success)
         if (res.data.success) {
-            return {type: LOGIN_SUCCESS, payload: res.data.userProfileId}
+            return {type: LOGIN_SUCCESS, payload: {id: res.data.userProfileId, isManager: res.data.isManager}}
         } else {
             return LOGIN_FAIL
         }

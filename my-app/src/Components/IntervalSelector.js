@@ -22,7 +22,7 @@ function IntervalSelector() {
             <Form className="row" style={dateSelectorBlock}>
                 <Form className="col-6" style={dateSelectorField}>
                     <Form.Label>Дата заказа</Form.Label>
-                    <Form.Control type="dateTime-local" placeholder={new Date().toString()} onChange={event => dispatch({
+                    <Form.Control type="date" placeholder={new Date().toString()} onChange={event => dispatch({
                         type: DATETIME_CHANGE,
                         payload: { time: event.target.value }
                     })}/>

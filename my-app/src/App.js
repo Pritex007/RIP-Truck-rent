@@ -4,21 +4,23 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import NaviBar from "./Components/NaviBar";
 import About from "./Pages/About";
 import Rent from "./Pages/Rent";
-import DetailedTruck from "./Pages/DetailedTruck";
-import {
-    reducer,
-    GET_SELECTED_TRUCK_FROM_LOCAL,
-    SET_SELECTED_TRUCK_FOR_LOCAL
-} from "./Supporting Files/reducer";
-import {defaultState, Context} from "./Supporting Files/context";
-import History from "./Pages/History";
-import {fetchBrand, fetchBrands, fetchOrders, fetchTruck, fetchTrucks} from "./Supporting Files/NetworkRequests";
-import Register from "./Pages/register";
-import Login from "./Pages/login";
-import {checkAuthenticated} from "./Supporting Files/auth";
+    import DetailedTruck from "./Pages/DetailedTruck";
+    import {
+        reducer,
+        GET_SELECTED_TRUCK_FROM_LOCAL,
+        SET_SELECTED_TRUCK_FOR_LOCAL
+    } from "./Supporting Files/reducer";
+    import {defaultState, Context} from "./Supporting Files/context";
+    import History from "./Pages/History";
+    import {fetchOrders, fetchTruck, fetchTrucks} from "./Supporting Files/NetworkRequests";
+    import Register from "./Pages/register";
+    import Login from "./Pages/login";
+    import {checkAuthenticated} from "./Supporting Files/auth";
+    import AddNewTruck from "./Pages/AddNewTruck";
+    import AddTruck from "./Pages/AddNewTruck";
 
-function App() {
-    const [state, dispatch] = useReducer(reducer, defaultState);
+    function App() {
+        const [state, dispatch] = useReducer(reducer, defaultState);
 
     useEffect(() => {
         dispatch({
@@ -29,9 +31,10 @@ function App() {
 
     useEffect(()=>{
         checkAuthenticated().then(status => {
+            console.log("AUTH STATUS", status)
             dispatch({
-                type: status,
-                payload: {}
+                type: status.isAuthenticated,
+                payload: { userProfileId: status.userProfileId, isManager: status.isManager}
             })
         })
     },[])
@@ -56,9 +59,7 @@ function App() {
         <Context.Provider value={{
             fetchOrders,
             fetchTrucks,
-            fetchBrands,
             fetchTruck,
-            fetchBrand,
             state, dispatch
         }}>
             <Router>
@@ -69,6 +70,7 @@ function App() {
                         <Route  path="/register" element={<Register/>}/>
                         <Route  path="/login" element={<Login/>}/>
                         <Route exact path="rent/:id" element={<DetailedTruck/>}/>
+                        <Route exact path="rent/add" element={<AddTruck/>}/>
                         <Route exact path="history/:id" element={<History/>}/>
                     </Routes>
             </Router>

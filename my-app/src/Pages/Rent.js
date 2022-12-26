@@ -6,6 +6,8 @@ import {LOAD_TRUCKS, SET_MAX_PRICE, SET_MIN_PRICE, SWITCH_ID} from "../Supportin
 import {Context} from "../Supporting Files/context";
 import {checkUserIsAuth} from "../App";
 import {postOrder} from "../Supporting Files/NetworkRequests";
+import {Link} from "react-router-dom";
+import {StatusEnum} from "./History";
 
 const TableBlockStyle = {
     margin: "20px 15%",
@@ -20,7 +22,6 @@ const TableCardStyle = {
 function Rent() {
     const {
         fetchTrucks,
-        fetchBrands,
         state,
         dispatch
     } = useContext(Context)
@@ -32,7 +33,8 @@ function Rent() {
                 address_take: "Москва",
                 time: state.time,
                 car: state.selectedTruck,
-                userProfile: state.id
+                userProfile: state.id,
+                status: StatusEnum.Pending
             })
         } else {
             alert("Авторизируйтесь, чтобы оформить заказ")
@@ -41,14 +43,11 @@ function Rent() {
 
     useEffect(()=>{
         fetchTrucks(state.minPrice, state.maxPrice).then(trucks => {
-            fetchBrands(trucks).then(brands => {
-                dispatch({
-                    type: LOAD_TRUCKS,
-                    payload: {
-                        trucks: trucks,
-                        brands: brands
-                    }
-                })
+            dispatch({
+                type: LOAD_TRUCKS,
+                payload: {
+                    trucks: trucks
+                }
             })
         })
     },[state.minPrice, state.maxPrice])
@@ -70,6 +69,10 @@ function Rent() {
                             <Form.Label>Max</Form.Label>
                             <Form.Control type="number" placeholder="---" onChange={event => dispatch({ type: SET_MAX_PRICE, payload: { maxPrice: event.target.value} })}/>
                         </Form.Group>
+                        {
+                            state.isManager &&
+                            <Link to="/rent/add" style={{width: "160px", height: "40px", margin: "auto 0 auto auto", text: "right"}}>Добавить авто</Link>
+                        }
                     </Row>
                 </Form.Group>
                 <Row className="g-4">
@@ -81,7 +84,7 @@ function Rent() {
                                 id={item.pk}
                                 name={item.title}
                                 price={item.price}
-                                brand={state.brands[index]}
+                                brand={item.brand}
                                 capacity={item.capacity}
                                 image={item.photo}
                                 isSelected={state.selectedTruck == item.pk}/>

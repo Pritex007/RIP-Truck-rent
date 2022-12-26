@@ -48,10 +48,6 @@ function NaviBar() {
                     <Nav.Link><Link to="/" style={linkStyle}>Rent</Link></Nav.Link>
                     <Nav.Link><Link to="/about" style={linkStyle}>About</Link></Nav.Link>
                     <Nav.Link><Link to={`/history/${state.id}`} style={linkStyle}>History</Link></Nav.Link>
-                    <Button variant="primary" onClick={ () => dispatch({
-                        type: SWITCH_ID,
-                        payload: {}
-                    })}>Switch</Button>
                 </Nav>
                 { state.isAuthenticated ? authLinks : guestLinks }
             </Navbar.Collapse>

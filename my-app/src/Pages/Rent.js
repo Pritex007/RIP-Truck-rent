@@ -91,18 +91,20 @@ function Rent() {
                         </Col>
                     })}
                 </Row>
-                <Button variant="primary"
-                        style={{
-                            display: "block",
-                            marginLeft: "auto",
-                            marginRight: "auto",
-                            width: "160px",
-                            height: "80px",
-                            fontSize: "30px"}}
-                        onClick={tryPost}
-                >
-                    Заказать
-                </Button>
+                { state.isAuthenticated &&
+                    <Button variant="primary"
+                            style={{
+                                display: "block",
+                                marginLeft: "auto",
+                                marginRight: "auto",
+                                width: "160px",
+                                height: "80px",
+                                fontSize: "30px"}}
+                            onClick={tryPost}
+                    >
+                        Заказать
+                    </Button>
+                }
             </div>
         </>
     );

@@ -9,7 +9,7 @@ function About() {
     return (
         <div class="about" style={aboutStyle}>
             <h3>Xonest transport one of the most popular and reliable company.</h3>
-            <p> We care about our customers</p>
+            <p> We care about our customers.</p>
         </div>
     );
 }

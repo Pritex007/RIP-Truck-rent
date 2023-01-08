@@ -8,6 +8,8 @@ import {checkUserIsAuth} from "../App";
 import {postOrder} from "../Supporting Files/NetworkRequests";
 import {Link} from "react-router-dom";
 import {StatusEnum} from "./History";
+import {Breadcrumbs} from "@mui/material";
+import {cardStyle} from "./DetailedTruck";
 
 const TableBlockStyle = {
     margin: "20px 15%",
@@ -58,6 +60,9 @@ function Rent() {
     return (
         <>
             <IntervalSelector/>
+            <Breadcrumbs style={TableBlockStyle} aria-label='breadcrumb'>
+                <Link style={{textDecoration: 'none'}} to='/'>Rent</Link>
+            </Breadcrumbs>
             <div style={TableBlockStyle}>
                 <Form.Group>
                     <Row>

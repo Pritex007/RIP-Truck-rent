@@ -63,7 +63,7 @@ export const login = async (username, password) => {
     }
 };
 
-export const register = async(username, password, re_password) => {
+export const register = async(username, password, re_password, email) => {
     const config = {
         withCredentials: true,
         headers: {
@@ -73,7 +73,7 @@ export const register = async(username, password, re_password) => {
         }
     };
 
-    const body = JSON.stringify({ username, password, re_password });
+    const body = JSON.stringify({ username, password, re_password, email });
 
     console.log("Body", body)
     try {

@@ -13,19 +13,20 @@ export default function Register() {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
-        re_password: ''
+        re_password: '',
+        email: ''
     });
     const [accountCreated, setAccountCreated] = useState(false);
 
-    const { username, password, re_password } = formData;
+    const { username, password, re_password, email } = formData;
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
     const onSubmit = e => {
         e.preventDefault();
 
         if (password === re_password) {
-            console.log(username, password, re_password)
-            register(username, password, re_password).then(status => {
+            console.log(username, password, re_password, email)
+            register(username, password, re_password, email).then(status => {
                 dispatch({ type: status, payload: {} })
             })
             setAccountCreated(true);
@@ -43,6 +44,12 @@ export default function Register() {
             <Form.Group className="mb-3">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="username" placeholder="Enter username" name="username" onChange={e => onChange(e)}/>
+            </Form.Group>
+
+
+            <Form.Group className="mb-3">
+                <Form.Label>Email</Form.Label>
+                <Form.Control type="email" placeholder="Enter email" name="email" onChange={e => onChange(e)}/>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
